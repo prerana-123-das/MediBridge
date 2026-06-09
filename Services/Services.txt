@@ -1,0 +1,50 @@
+Authentication & Authorization Service:
+Technology: Spring Boot
+JWT Authentication
+Role-Based Access
+OAuth2
+Password Encryption
+Refresh Tokens
+
+Implementation effort is much lower than building everything manually.
+
+2. Doctor Service:
+
+3. Patient Service
+
+4. Appointment Service: 
+-> video link will be generated
+
+5. Prescription Service (.net)
+
+6. Medical Report Service (.net)
+
+7. Payment & Analytics Service   +   Billing Services  (.net)
+
+8. Admin & Analytics Service (.net)
+
+9. Notification Service  (springboot)
+
+10. Support/Contact Service  (.net)
+
+11. Doctor Search Service
+
+12. Review & Rating Service  (springboot)
+
+13. Analytics Services  (.net)
+Total Appointments
+Daily Revenue
+Cancelled Appointments
+
+14. Audit & Activity Service  (.net -prerana)
+Track Login
+Track Logout
+Track Important Actions
+Store Audit Trail
+Admin Monitoring
+
+15. Report Generation Service  (.net)
+prescription PDF
+Medical History PDF
+Invoice PDF
+Refund Receipt PDF 
