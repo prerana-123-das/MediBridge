@@ -1,1 +1,82 @@
-query
+CREATE TABLE `admin` (
+    `admin_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `username` VARCHAR(50) NOT NULL UNIQUE,
+    `email` VARCHAR(100) NOT NULL UNIQUE,
+    `password_hash` VARCHAR(255) NOT NULL,
+    `role` VARCHAR(30) DEFAULT 'System Administrator',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+NOTE : // Allows only alphanumeric characters and underscores
+@Pattern(regexp = "^[a-zA-Z0-9_]+$") 
+private String username;
+
+CREATE TABLE `doctor` (
+    `doctor_id` VARCHAR(36) PRIMARY KEY, -- Utilizing UUID format as per schema diagram
+    `full_name` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) NOT NULL UNIQUE,
+    `password_hash` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(20) NOT NULL,
+    `specialization` VARCHAR(100) NOT NULL,
+    `license_number` VARCHAR(50) NOT NULL UNIQUE,
+    `experience_years` INT NOT NULL,
+    `consultation_fee` DECIMAL(10, 2) NOT NULL,
+    `consultation_duration_min` INT DEFAULT 30,
+    `bio` TEXT,
+    `status` ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+NOTE : for generate random userId for doctor -> @GeneratedValue(strategy = GenerationType.UUID)
+
+
+
+
+
+Why Patients Don't Need UUIDs (Unlike Doctors)
+Earlier, we looked at why doctors use strings to hide their internal sequential order from profile page links. The security risks for patient data are handled differently:
+
+No Public Profiles: Unlike a doctor whose information is visible to anyone searching the platform, a patient's dashboard is strictly private. There is no public URL like medibridge.com/patients/101 for an attacker to guess or scrape.
+
+Role-Based Access Control (RBAC): Access to patient records is locked down by security configurations at the backend API layer. Even if someone guesses that patient_id = 45 exists, the backend validates the user's secure active session first. If the logged-in user isn't that exact patient or an authorized doctor, the server blocks the request with a 403 Forbidden response.
+
+
+
+CREATE TABLE `patient` (
+    `patient_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `full_name` VARCHAR(100) NOT NULL,
+    `phone` VARCHAR(20) NOT NULL,
+    `email` VARCHAR(100) NOT NULL UNIQUE,
+    `address` TEXT,
+    `date_of_birth` DATE NOT NULL,
+    `gender` ENUM('Male', 'Female', 'Other') NOT NULL,
+    `blood_group` VARCHAR(5) NOT NULL,
+    `reason_of_consult` TEXT,
+    `password_hash` VARCHAR(255) NOT NULL,
+    `another_number` VARCHAR(20) DEFAULT NULL,
+    `status` ENUM('active', 'inactive') DEFAULT 'active',
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+CREATE TABLE `doctor_schedule` (
+    `schedule_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `doctor_id` VARCHAR(36) NOT NULL,
+    `available_date` DATE NOT NULL,
+    `start_time` TIME NOT NULL,
+    `end_time` TIME NOT NULL,
+    `is_booked` BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (`doctor_id`) REFERENCES `doctor`(`doctor_id`) ON DELETE CASCADE,
+    UNIQUE KEY `unique_doctor_slot` (`doctor_id`, `available_date`, `start_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+ON DELETE CASCADE
+This is the action rule that tells MySQL what to do when a parent record is deleted.
+
+If a doctor decides to permanently delete their account from MediBridge, and their unique identifier is removed from the main doctor table, MySQL will automatically go through every other table containing this constraint and instantly delete all rows linked to that specific doctor.
+
+
+
