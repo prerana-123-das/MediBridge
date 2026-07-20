@@ -80,3 +80,88 @@ If a doctor decides to permanently delete their account from MediBridge, and the
 
 
 
+CREATE TABLE `appointment` (
+    `appointment_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `patient_id` INT NOT NULL,
+    `doctor_id` VARCHAR(36) NOT NULL,
+    `schedule_id` INT DEFAULT NULL,
+    `request_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `appointment_date` DATETIME NOT NULL,
+    `status` ENUM('Requested', 'Accepted', 'Rejected', 'Rescheduled', 'Completed', 'Cancelled', 'Auto-Expired') DEFAULT 'Requested',
+    `reason` TEXT,
+    FOREIGN KEY (`patient_id`) REFERENCES `patient`(`patient_id`) ON DELETE RESTRICT,
+    FOREIGN KEY (`doctor_id`) REFERENCES `doctor`(`doctor_id`) ON DELETE RESTRICT,
+    FOREIGN KEY (`schedule_id`) REFERENCES `doctor_schedule`(`schedule_id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `medical_report` (
+    `report_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `patient_id` INT NOT NULL,
+    `report_name` VARCHAR(150) NOT NULL,
+    `report_type` VARCHAR(50) NOT NULL, -- e.g., 'Lab Report', 'Imaging'
+    `report_data_url` VARCHAR(255) NOT NULL, -- Storing file path/URL sequentially instead of heavy blobs
+    `upload_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`patient_id`) REFERENCES `patient`(`patient_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+CREATE TABLE `consultation_record` (
+    `consultation_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `appointment_id` INT NOT NULL UNIQUE,       -- Appointment table se connecting point
+    `diagnosis` VARCHAR(255) NOT NULL,          -- Bimari ka naam (e.g., 'Viral Fever')
+    `notes` TEXT,                               -- Doctor ki detail remarks ya observations
+    `has_prescription` BOOLEAN DEFAULT FALSE,   -- True/False (Kya dawai di gayi hai?)
+    FOREIGN KEY (`appointment_id`) REFERENCES `appointment`(`appointment_id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+-- 8. PRESCRIPTION TABLE
+-- ==========================================
+CREATE TABLE `prescription` (
+    `prescription_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `patient_id` INT NOT NULL,
+    `doctor_id` VARCHAR(36) NOT NULL,
+    `consultation_id` INT NOT NULL UNIQUE,
+    `diagnosis_text` TEXT NOT NULL,
+    `date_issued` DATE NOT NULL,
+    FOREIGN KEY (`patient_id`) REFERENCES `patient`(`patient_id`) ON DELETE RESTRICT,
+    FOREIGN KEY (`doctor_id`) REFERENCES `doctor`(`doctor_id`) ON DELETE RESTRICT,
+    FOREIGN KEY (`consultation_id`) REFERENCES `consultation_record`(`consultation_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `payment_transaction` (
+    `transaction_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `appointment_id` INT NOT NULL,
+    `amount` DECIMAL(10, 2) NOT NULL,
+    `payment_method` VARCHAR(50) NOT NULL,
+    `transaction_status` ENUM('Paid', 'Refunded', 'Failed') DEFAULT 'Paid',
+    `processed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`appointment_id`) REFERENCES `appointment`(`appointment_id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `rating` (
+    `rating_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `appointment_id` INT NOT NULL UNIQUE,          -- Ek appointment ke liye ek hi review
+    `patient_id` INT NOT NULL,                     -- Patient link
+    `doctor_id` VARCHAR(36) NOT NULL,              -- Doctor link (UUID)
+    
+    `stars` TINYINT NOT NULL CHECK (`stars` BETWEEN 1 AND 5),
+    
+    `overall_experience` ENUM('Excellent', 'Good', 'Okay', 'Poor') NOT NULL,
+
+    `what_stood_out` ENUM('Bedside Manner', 'Clear Explanations', 'Follow-up Care', 'Accurate Diagnosis', 'Friendly Staff') DEFAULT NULL,
+    
+    `review_text` TEXT,
+    
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Foreign Key Constraints
+    FOREIGN KEY (`appointment_id`) REFERENCES `appointment`(`appointment_id`) ON DELETE RESTRICT,
+    FOREIGN KEY (`patient_id`) REFERENCES `patient`(`patient_id`) ON DELETE RESTRICT,
+    FOREIGN KEY (`doctor_id`) REFERENCES `doctor`(`doctor_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
