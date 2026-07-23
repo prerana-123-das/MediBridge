@@ -130,6 +130,7 @@ export default function BookAppointment() {
           </div>
         )}
 
+
         {step === 1 && (
           <div>
             <h1 className="text-3xl font-extrabold text-slate-900">Choose a Doctor</h1>
@@ -187,6 +188,10 @@ export default function BookAppointment() {
                   please try another.
                 </div>
               )}
+
+
+
+
 
               <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4">
                 {slots.map((s) => (
@@ -247,7 +252,7 @@ export default function BookAppointment() {
             </Card>
             <div className="mt-5 flex max-w-lg justify-between">
               <button onClick={() => setStep(2)} className="text-sm font-medium text-slate-500 hover:text-primary-600">← Back</button>
-              <Button onClick={proceedToPayment} className="px-6">Proceed to Payment</Button>
+              <Button onClick={proceedToPayment} className="px-6">Proceed to payment</Button>
             </div>
           </div>
         )}
