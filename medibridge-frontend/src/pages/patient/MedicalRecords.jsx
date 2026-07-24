@@ -13,6 +13,10 @@ export default function MedicalRecords() {
   const records = useSelector((s) => s.records.list)
   const fileInput = useRef(null)
 
+
+
+
+
   const [prescriptions, setPrescriptions] = useState([])
   const [busy, setBusy] = useState(null)
   const [msg, setMsg] = useState(null)
