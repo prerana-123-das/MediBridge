@@ -25,10 +25,11 @@ export default function WritePrescription() {
   const [form, setForm] = useState({
     diagnosis: '', notes: '', follow_up_date: '', advice: '',
   })
-  const [medicines, setMedicines] = useState([{ ...BLANK_MEDICINE }])
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState(null)
-  const [issued, setIssued] = useState(null)
+ 
+
+
+  
+
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
