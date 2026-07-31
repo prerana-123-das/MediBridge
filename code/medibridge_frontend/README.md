@@ -1,7 +1,7 @@
 # MediBridge — Frontend
 
 Digital healthcare platform frontend built exactly to the provided wireframes.
-Stack: **React + Vite + Redux Toolkit + React Router + Tailwind CSS + Axios**.
+Stack: **React + Vite + Redux Toolkit + React Router + Bootstrap CSS + Axios**.
 
 Three portals with role-based routing: **Patient**, **Doctor**, **Admin**.
 
