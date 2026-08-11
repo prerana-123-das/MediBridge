@@ -40,4 +40,3 @@ export const useTimeRefresh = (intervalMs = 30000) => {
     return () => clearInterval(interval);
   }, [intervalMs]);
 };
-
