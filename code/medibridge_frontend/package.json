@@ -4,7 +4,11 @@
   "version": "1.0.0",
   "type": "module",
 <<<<<<< HEAD
+<<<<<<< HEAD
   "description": "MediBridge - Digital Healthcare Platform frontend (React + Vite + Redux + Tailwind)",
+=======
+  "description": "MediBridge - Digital Healthcare Platform frontend (React + Vite + Redux + Bootstrap)",
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
 =======
   "description": "MediBridge - Digital Healthcare Platform frontend (React + Vite + Redux + Bootstrap)",
 >>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
@@ -17,6 +21,10 @@
     "@reduxjs/toolkit": "^2.3.0",
     "axios": "^1.7.7",
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    "bootstrap": "^5.3.3",
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
 =======
     "bootstrap": "^5.3.3",
 >>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
@@ -29,10 +37,14 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.3",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "vite": "^8.1.5"
+=======
+    "vite": "^8.2.0"
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
 =======
     "vite": "^8.2.0"
 >>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
