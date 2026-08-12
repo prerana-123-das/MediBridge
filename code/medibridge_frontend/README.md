@@ -1,93 +1,70 @@
-# MediBridge — Frontend
+# MediBridge Frontend
 
-Digital healthcare platform frontend built exactly to the provided wireframes.
-<<<<<<< HEAD
-<<<<<<< HEAD
-Stack: **React + Vite + Redux Toolkit + React Router + Tailwind CSS + Axios**.
-=======
-Stack: **React + Vite + Redux Toolkit + React Router + Bootstrap CSS + Axios**.
->>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
-=======
-Stack: **React + Vite + Redux Toolkit + React Router + Bootstrap CSS + Axios**.
->>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
+This is the frontend part of my MediBridge project. It's a digital healthcare platform that I built to match the project wireframes. 
 
-Three portals with role-based routing: **Patient**, **Doctor**, **Admin**.
+It has three separate portals using role-based routing: Patient, Doctor, and Admin.
 
-## Quick start
+**Tech Stack:**
+- React (bootstrapped with Vite)
+- Redux Toolkit for state management
+- React Router DOM
+- Bootstrap 5 for styling
+- Axios for API calls
+
+## Getting Started
+
+To run this locally, just install the dependencies and start the dev server:
 
 ```bash
 npm install
 npm run dev
 ```
+Then open http://localhost:5173 in your browser.
 
-Open http://localhost:5173
+**Note on testing:** I set it up with mock data enabled by default so you don't even need the backend running to click around the UI. You can just put in any fake email/password on the login screen to test out the different roles.
 
-### Login (mock mode is ON by default)
-Any email/password works. Pick the role on the login screen:
-- **Patient** tab → patient dashboard
-- **Doctor** tab → doctor dashboard
-- **Admin Login →** link (or `/admin/login`) → admin dashboard
+## Connecting to Backend
 
-## Connecting your Spring Boot backend
+Once the Spring Boot backend is up and running, you just need to update the `.env` file to point to it:
 
-The app ships with realistic mock data so it runs with zero backend.
-When your backend is ready, edit `.env`:
-
-```
+```env
 VITE_API_BASE_URL=http://localhost:8080/api
-VITE_USE_MOCK=false     # switch mock off to use live endpoints
+VITE_USE_MOCK=false
 ```
 
-Every API call already lives in `src/services/*`. Each method calls the real
-endpoint when `VITE_USE_MOCK=false`, and returns mock data otherwise — so you
-only flip one flag, no component changes needed. A JWT stored in `localStorage`
-is auto-attached as `Authorization: Bearer <token>` by `src/api/axiosClient.js`.
+Setting `VITE_USE_MOCK=false` will make all the API services in `src/services/` start hitting the real endpoints instead of returning the hardcoded mock data. The JWT token also gets attached automatically to the request headers by the Axios interceptor I set up in `src/api/axiosClient.js`.
 
-### Expected endpoints (align your Spring Boot controllers)
-```
-POST /auth/login                 { email, password, role }
-POST /auth/register/patient
-POST /auth/register/doctor
-GET  /doctors
-GET  /specialties
-GET  /appointments/patient
-POST /appointments
-PATCH /appointments/{id}/cancel
-GET  /appointments/doctor/dashboard
-GET  /records
-POST /records
-GET  /admin/dashboard | /admin/patients | /admin/doctors
-GET  /admin/appointments | /admin/analytics | /admin/settings
-```
+### Expected API Endpoints
+If you are running the backend alongside this, these are the main endpoints the frontend expects to hit:
+- `POST /auth/login` (needs email, password, role)
+- `POST /auth/register/patient`
+- `POST /auth/register/doctor`
+- `GET /doctors`
+- `GET /specialties`
+- `GET /appointments/patient`
+- `POST /appointments`
+- `PATCH /appointments/{id}/cancel`
+- `GET /appointments/doctor/dashboard`
+- `GET /records`
+- `POST /records`
+- And various `/admin/*` routes for the admin dashboard.
 
-## Project structure
+## Folder Structure
 
-```
-src/
-├── api/            axios client + mock data (mirrors the MySQL schema)
-├── app/            Redux store
-├── features/       Redux Toolkit slices (auth, doctors, appointments, records, admin)
-├── services/       API service layer with mock fallback per method
-├── components/
-│   ├── common/     Button, Badge, Card, Input, Avatar, StatCard, Logo
-│   ├── layout/     PublicNavbar, DashboardTopbar, Sidebar, DashboardLayout
-│   └── routing/    ProtectedRoute (RBAC guard)
-├── pages/
-│   ├── public/     Landing, Login (patient/doctor tabs + register), Admin login
-│   ├── patient/    Overview, Appointments, Find Doctors, Book wizard, Records,
-│   │               Settings, Payment, Rate Experience
-│   ├── doctor/     Overview, Appointments, Patient Records, Schedule, Settings
-│   └── admin/      Overview, Manage Patients, Manage Doctors, Appointments,
-│                   Analytics, System Settings
-└── routes/         AppRoutes (all routes + role protection)
-```
+Here's a quick overview of how I organized the `src` folder:
+- `api/`: The axios client setup
+- `app/`: Redux store config
+- `features/`: All the Redux slices (auth, doctors, appointments, etc.)
+- `services/`: API call functions (with the logic to switch between real and mock data)
+- `components/`: 
+  - `common/`: Reusable UI bits like buttons, cards, and inputs
+  - `layout/`: Navbars, sidebars, and page wrappers
+- `pages/`: Grouped by portal (public, patient, doctor, admin)
+- `routes/`: Where all the React Router logic and role protection lives
 
-## Pages ↔ wireframes
-All 22 wireframe screens are implemented, plus the booking flow, payment, and
-rating screens shown in the flow diagram.
+## Building for Production
 
-## Build
+To build the project for deployment:
 ```bash
-npm run build      # outputs to dist/
-npm run preview
+npm run build
 ```
