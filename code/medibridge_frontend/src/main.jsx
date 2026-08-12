@@ -1,5 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+<<<<<<< HEAD
+<<<<<<< HEAD
+import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
+import { store } from './app/store'
+import App from './App'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
+)
+=======
+=======
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
 import App from './App'
 import './index.css'
 import { Provider } from 'react-redux'
@@ -15,4 +35,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             </BrowserRouter>
         </Provider>
     </React.StrictMode>
+<<<<<<< HEAD
 )
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
+=======
+)
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6

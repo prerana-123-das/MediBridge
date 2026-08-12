@@ -1,3 +1,19 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+=======
+=======
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
 /* ===== MediBridge Custom CSS (Bootstrap companion) ===== */
 
 /* ---- CSS Custom Properties ---- */
@@ -51,6 +67,10 @@
 
 /* ---- Base Resets ---- */
 html, body, #root {
+<<<<<<< HEAD
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
+=======
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
   height: 100%;
 }
 
@@ -58,6 +78,16 @@ body {
   margin: 0;
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* Toggle switch used on the doctor schedule + admin settings pages */
+=======
+=======
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
   background-color: var(--mb-slate-50);
   color: var(--mb-slate-900);
 }
@@ -536,6 +566,10 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ---- Toggle switch (doctor schedule + admin settings pages) ---- */
+<<<<<<< HEAD
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
+=======
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
 .toggle {
   position: relative;
   display: inline-flex;
@@ -557,6 +591,18 @@ a { text-decoration: none; color: inherit; }
   background: #fff;
   transition: transform 0.2s ease;
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+.toggle[data-on='true'] { background-color: #2563eb; }
+.toggle[data-on='false'] { background-color: #cbd5e1; }
+.toggle[data-on='true'] span { transform: translateX(20px); }
+
+/* thin custom scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+=======
+=======
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
 .toggle[data-on='true'] { background-color: var(--mb-primary); }
 .toggle[data-on='false'] { background-color: var(--mb-slate-300); }
 .toggle[data-on='true'] span { transform: translateX(20px); }
@@ -610,3 +656,7 @@ a { text-decoration: none; color: inherit; }
 .from-slate-900 { --tw-gradient-from: #0f172a var(--tw-gradient-from-position); --tw-gradient-to: rgba(15, 23, 42, 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 .to-slate-800 { --tw-gradient-to: #1e293b var(--tw-gradient-to-position); }
 .to-white { --tw-gradient-to: #ffffff var(--tw-gradient-to-position); }
+<<<<<<< HEAD
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
+=======
+>>>>>>> 98b0a17ccee8f36872150f34202bb462998a66d6
