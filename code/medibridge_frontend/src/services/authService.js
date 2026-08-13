@@ -16,4 +16,14 @@ export const authService = {
     const { data } = await axiosClient.post('/auth/register/doctor', payload)
     return data.data
   },
+
+  async changePassword(payload) {
+    const { data } = await axiosClient.post('/auth/change-password', payload)
+    return data.data
+  },
+
+  async resetPassword(payload) {
+    const { data } = await axiosClient.post('/auth/reset-password', payload)
+    return data.data
+  }
 }

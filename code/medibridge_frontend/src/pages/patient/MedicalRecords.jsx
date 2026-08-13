@@ -10,11 +10,14 @@ export default function MedicalRecords() {
   const records = useSelector((s) => s.records.list)
   const fileInputRef = useRef(null)
   
+  // Keeps track of the document currently opened in the preview modal.
   const [viewingRecord, setViewingRecord] = useState(null)
 
+  // Load the patient's medical records when the page is opened.
   useEffect(() => { dispatch(fetchRecords()) }, [dispatch])
 
   const handleUploadClick = () => {
+    // Trigger the hidden file input when the user clicks "Upload New".
     fileInputRef.current?.click()
   }
 
@@ -22,6 +25,7 @@ export default function MedicalRecords() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // Convert the selected file into a data URL so it can be stored and displayed later.
     const reader = new FileReader()
     reader.onload = (ev) => {
       const base64Str = ev.target.result
@@ -33,6 +37,7 @@ export default function MedicalRecords() {
         fileSize: (file.size / 1024 / 1024).toFixed(1) + ' MB'
       }
 
+      // Send the new record through Redux so it can be saved.
       dispatch(uploadRecordThunk(newRecord))
     }
     reader.readAsDataURL(file)
@@ -40,6 +45,7 @@ export default function MedicalRecords() {
   }
 
   const handleDelete = (id) => {
+    // Ask for confirmation before permanently removing a medical record.
     if (window.confirm("Are you sure you want to delete this record?")) {
       dispatch(deleteRecord(id))
     }
@@ -52,7 +58,7 @@ export default function MedicalRecords() {
     const rDate = record.uploadDate ? new Date(record.uploadDate).toLocaleDateString() : record.upload_date
 
     if (fileUrl && fileUrl.startsWith('data:')) {
-      // It's a real uploaded file
+      // For uploaded files, use the original data URL to create the download.
       const link = document.createElement('a')
       link.href = fileUrl
       link.download = rName
@@ -60,18 +66,19 @@ export default function MedicalRecords() {
       link.click()
       document.body.removeChild(link)
     } else {
-      // Mock record download
+      // Mock records don't have a real file, so create a small text file instead.
       const element = document.createElement("a");
       const file = new Blob([`Mock contents for ${rName}\nType: ${rType}\nDate: ${rDate}`], {type: 'text/plain'});
       element.href = URL.createObjectURL(file);
       element.download = `${rName}.txt`;
       document.body.appendChild(element);
       element.click();
-      document.body.removeChild(element);
+      document.body.removeChild(element)
     }
   }
 
   const handleView = (record) => {
+    // Open the selected record inside the preview modal.
     setViewingRecord(record)
   }
 
@@ -107,6 +114,7 @@ export default function MedicalRecords() {
             </div>
           ) : (
             records.map((r) => {
+              // Support both frontend and backend naming conventions for record fields.
               const rId = r.reportId || r.report_id
               const rName = r.reportName || r.report_name
               const rType = r.reportType || r.report_type
@@ -131,6 +139,7 @@ export default function MedicalRecords() {
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-2">
+                  {/* Each action button handles one operation on the selected record. */}
                   <button onClick={() => handleView(r)} className="btn btn-sm d-flex align-items-center justify-content-center rounded-3 border border-2" style={{ width: '36px', height: '36px', color: '#2563eb', backgroundColor: '#eff6ff', borderColor: '#bfdbfe' }} title="View Document">
                     <Eye size={18} />
                   </button>
@@ -167,6 +176,7 @@ export default function MedicalRecords() {
             </div>
             
             <div className="flex-grow-1 overflow-auto p-4 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#f8fafc', minHeight: '400px' }}>
+              {/* Images and PDFs can be previewed directly, while other formats fall back to download. */}
               {(viewingRecord.reportDataUrl || viewingRecord.fileUrl) && (viewingRecord.reportType || viewingRecord.report_type) === 'Image' ? (
                 <img src={viewingRecord.reportDataUrl || viewingRecord.fileUrl} alt={viewingRecord.reportName || viewingRecord.report_name} className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '100%' }} />
               ) : (viewingRecord.reportDataUrl || viewingRecord.fileUrl) && (viewingRecord.reportType || viewingRecord.report_type) === 'PDF Document' ? (
@@ -192,4 +202,3 @@ export default function MedicalRecords() {
     </DashboardLayout>
   )
 }
-

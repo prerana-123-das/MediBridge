@@ -19,7 +19,4 @@ axiosClient.interceptors.response.use(
   (error) => Promise.reject(error)
 )
 
-// Global flag: when true, services return mock data instead of calling the API.
-// USE_MOCK has been removed
-
 export default axiosClient
