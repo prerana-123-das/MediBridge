@@ -18,10 +18,12 @@ export default function DoctorProfile() {
   const authUser = useSelector((s) => s.auth.user)
   const [doctor, setDoctor] = useState(null)
 
+  // Load doctors only when the list is not already available in Redux.
   useEffect(() => {
     if (doctors.length === 0) {
       dispatch(fetchDoctors())
     } else {
+      // Find the doctor whose ID matches the ID from the URL.
       const found = doctors.find(d => String(d.doctorId) === String(id))
       if (found) setDoctor(found)
     }
@@ -29,6 +31,7 @@ export default function DoctorProfile() {
 
   const content = (
     <>
+      {/* Let the user return to the previous page without hardcoding a route. */}
       <button onClick={() => navigate(-1)} className="mb-6 flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900">
         <ArrowLeft size={16} /> Back
       </button>
@@ -42,7 +45,8 @@ export default function DoctorProfile() {
             <div className="flex-1">
               <h1 className="text-3xl font-extrabold text-slate-900">{doctor.fullName}</h1>
               <div className="mt-1 text-lg font-medium text-primary-600">{doctor.specialization}</div>
-              
+               
+              {/* Show the main information patients usually check before booking. */}
               <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm sm:justify-start">
                 <div className="flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 font-semibold text-amber-600">
                   <Star size={14} fill="currentColor" /> {doctor.rating}
@@ -64,17 +68,20 @@ export default function DoctorProfile() {
                 )}
               </div>
 
+              {/* Display the doctor's bio if one has been provided. */}
               <div className="mt-6 border-t border-slate-100 pt-6">
                 <h3 className="font-bold text-slate-900">About Doctor</h3>
                 <p className="mt-2 leading-relaxed text-slate-600">{doctor.bio || 'No bio available.'}</p>
               </div>
 
               <div className="mt-8">
-                <Button 
-                  variant="primary" 
+                {/* Prevent booking when the doctor is inactive or unavailable. */}
+                <Button
+                  variant="primary"
                   className="w-full sm:w-auto"
                   disabled={!doctor.available || (doctor.status || '').toLowerCase() === 'inactive'}
                   onClick={() => {
+                    // Guests are sent to login first, while logged-in patients can book directly.
                     if (!authUser) {
                       navigate('/login', { state: { returnTo: '/patient/book', doctorId: doctor.doctorId, skipToDate: true } })
                     } else {
@@ -89,11 +96,13 @@ export default function DoctorProfile() {
           </div>
         </Card>
       ) : (
+        // This also covers the short loading period while the doctor data is being fetched.
         <div className="py-20 text-center text-slate-500">Doctor not found or loading...</div>
       )}
     </>
   )
 
+  // Public users see the profile with the public navbar instead of the patient dashboard.
   if (!authUser || authUser.role !== 'patient') {
     return (
       <div className="min-h-screen bg-slate-50">
@@ -105,5 +114,6 @@ export default function DoctorProfile() {
     )
   }
 
+  // Logged-in patients get the normal dashboard layout and patient navigation.
   return <DashboardLayout navItems={patientNav}>{content}</DashboardLayout>
 }

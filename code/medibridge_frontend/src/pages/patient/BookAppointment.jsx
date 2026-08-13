@@ -5,6 +5,7 @@ import { Check, Star, Calendar, Clock, FileUp, User } from 'lucide-react'
 import DashboardTopbar from '../../components/layout/DashboardTopbar'
 import { fetchDoctors, fetchAvailableSlots, fetchSpecialties } from '../../features/doctors/doctorsSlice'
 
+// These are the steps the patient follows while booking an appointment.
 const steps = ['Select Specialty', 'Choose Doctor', 'Select Time', 'Details', 'Confirm']
 
 function Stepper({ current }) {
@@ -50,8 +51,12 @@ export default function BookAppointment() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
+
+  // Get doctor-related data directly from Redux instead of keeping a separate copy here.
   const doctors = useSelector((s) => s.doctors.list)
   const specialties = useSelector((s) => s.doctors.specialties) || []
+
+  // Keep track of the patient's current selection throughout the booking flow.
   const [step, setStep] = useState(0)
   const [specialty, setSpecialty] = useState(null)
   const [doctor, setDoctor] = useState(null)
@@ -63,6 +68,7 @@ export default function BookAppointment() {
   const [files, setFiles] = useState([])
   const availableSlots = useSelector(s => s.doctors.availableSlots) || []
 
+  // Once both doctor and date are selected, fetch the slots available for that day.
   useEffect(() => {
     if (doctor?.doctorId && date) {
       dispatch(fetchAvailableSlots({ doctorId: doctor.doctorId, date }))
@@ -70,11 +76,13 @@ export default function BookAppointment() {
     }
   }, [dispatch, doctor, date])
 
+  // Load the initial doctor and specialty data when the booking page opens.
   useEffect(() => { 
     dispatch(fetchDoctors())
     dispatch(fetchSpecialties())
   }, [dispatch])
 
+  // Handle cases where the user arrives here after selecting a doctor from another page.
   useEffect(() => {
     if (location.state?.skipToDate && location.state?.doctorId && doctors.length > 0) {
       const selectedDoc = doctors.find(d => String(d.doctorId) === String(location.state.doctorId))
@@ -87,10 +95,12 @@ export default function BookAppointment() {
     }
   }, [location.state, doctors, navigate])
 
+  // Pass all the booking details to the payment page before moving forward.
   const proceedToPayment = () => {
     navigate('/patient/payment', { state: { doctor, date, slot, specialty, subject, description, attachedFiles: files.map(f => f.name) } })
   }
 
+  // Store the selected files so they can be included with the appointment details.
   const handleFileUpload = (e) => {
     if (e.target.files?.length) {
       setFiles([...files, ...Array.from(e.target.files)])
@@ -168,6 +178,7 @@ export default function BookAppointment() {
           </div>
         )}
 
+        
         {step === 2 && (
           <div className="mt-4">
             <h1 className="fw-bolder m-0" style={{ color: '#0f172a', fontSize: '2rem' }}>Select Date & Time</h1>
