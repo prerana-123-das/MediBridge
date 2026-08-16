@@ -1,0 +1,6 @@
+@MediBridge.Services.EmailPayment_HostAddress = http://localhost:5114
+
+GET {{MediBridge.Services.EmailPayment_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
